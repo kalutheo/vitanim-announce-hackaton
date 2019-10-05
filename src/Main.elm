@@ -7,8 +7,9 @@ import CustomTable.CustomTableType as CustomTableType exposing (Msg(..))
 import DataSet exposing (..)
 import Date exposing (Date)
 import Form
-import Html exposing (Html, div, header, pre, span, text)
+import Html exposing (Html, button, div, header, pre, span, text)
 import Html.Attributes exposing (class, style)
+import Html.Events exposing (onClick)
 import Http
 import Model exposing (..)
 import Ports exposing (scrolledTo, updateCustomTable)
@@ -106,6 +107,14 @@ update msg model =
 
                 _ ->
                     ( model, Cmd.none )
+
+        AddAd ->
+            ( CreationForm initialAdInput
+            , Cmd.none
+            )
+
+        ViewList ->
+            ( ListingData { data = [], state = CustomTable.initState -1 }, Cmd.none )
 
         Model.ScrolledTo scrollEvent ->
             update (CustomTableMsg <| CustomTableType.ScrolledTo scrollEvent) model
@@ -215,7 +224,13 @@ subscriptions model =
 viewLayout : Html Model.Msg -> Html Model.Msg
 viewLayout content =
     Html.div []
-        [ header [ class "w-full bg-gray-800 p-4 " ] [ span [ class "ml-1 font-sans text-xs text-gray-400" ] [ text "Vitanim Ad Generator" ] ]
+        [ header [ class "w-full bg-gray-800 p-4 " ]
+            [ span [ class "ml-1 font-sans text-xs text-gray-400" ]
+                [ button [ onClick AddAd ] [ text "Vitanim Ad Generator" ] ]
+            , span [ class "ml-1 font-sans text-xs text-gray-400" ] [ text "|" ]
+            , span [ class "ml-1 font-sans text-xs text-gray-400" ]
+                [ button [ onClick ViewList ] [ text "View List" ] ]
+            ]
         , content
         ]
 
