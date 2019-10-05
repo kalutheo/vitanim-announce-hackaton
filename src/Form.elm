@@ -32,11 +32,17 @@ customTitle titleText =
     span [ class "text-lg ml-2 font-sans text-gray-600" ] [ text titleText ]
 
 
+<<<<<<< HEAD
 view :
     AdInput
     -> Html Msg
 view adInput =
     Html.form [ onSubmit <| Validated adInput, class "flex h-screen w-screen flex-col p-3", style "width" "600px" ]
+=======
+view : Html Msg
+view =
+    Html.form [ class "flex h-screen w-screen flex-col p-3", style "width" "600px" ]
+>>>>>>> origin/feat-ui-css
         [ div [ class "mb-4" ]
             [ customTitle "Durée du séjour"
             , viewFieldRow
