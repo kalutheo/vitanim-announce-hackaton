@@ -165,7 +165,6 @@ update msg model =
 
         Validated adInput ->
             let
-<<<<<<< HEAD
                 newData =
                     case toAd adInput of
                         Just a ->
@@ -175,12 +174,6 @@ update msg model =
                             model.data
             in
             ( { model | data = List.indexedMap (\i a -> { a | index = i }) newData, page = (GeneratedAd << transform << validate adValidator) adInput }, Cmd.none )
-=======
-                _ =
-                    Debug.log "Validated" adInput
-            in
-            ( (GeneratedAd << transform << validate adValidator) adInput, Cmd.none )
->>>>>>> origin/fix-date
 
 
 transform : Result (List FieldError) (Valid AdInput) -> String
