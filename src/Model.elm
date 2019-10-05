@@ -1,11 +1,11 @@
-module Model exposing (Ad, AdInput, Listing, Model(..), Msg(..), Thematic(..), emptyAdListing)
+module Model exposing (Ad, AdInput, Listing, Model(..), Msg(..), Ton(..), emptyAdListing)
 
 import CustomTable.CustomTable as CustomTable exposing (initState)
 import CustomTable.CustomTableType as CustomTableType exposing (Accessor(..), Column, Config, Filter(..), Item, Model, Msg(..), State, ValueFilter(..))
 import Date exposing (Date)
 
 
-type Thematic
+type Ton
     = Standard
     | Funky
 
@@ -13,7 +13,7 @@ type Thematic
 type alias AdInput =
     { startDate : Maybe Date
     , endDate : Maybe Date
-    , thematic : Maybe Thematic
+    , ton : Maybe Ton
     , minAge : Maybe Int
     , maxAge : Maybe Int
     }
@@ -26,7 +26,7 @@ type alias Ad =
     , endDate : Date
     , minAge : Int
     , maxAge : Int
-    , thematic : Thematic
+    , ton : Ton
     }
 
 

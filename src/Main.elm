@@ -9,9 +9,9 @@ import Date exposing (Date)
 import Html exposing (Html, div, pre, text)
 import Html.Attributes exposing (style)
 import Http
-import Validate exposing (Validator, ifBlank, ifTrue, validate)
 import Model exposing (..)
 import Ports exposing (scrolledTo, updateCustomTable)
+import Validate exposing (Validator, ifBlank, ifTrue, validate)
 
 
 
@@ -29,6 +29,7 @@ main =
 
 
 -- MODEL
+
 
 initialAdInput =
     { startDate = Nothing
@@ -76,7 +77,9 @@ toAd : AdInput -> Maybe Ad
 toAd { startDate, endDate, minAge, maxAge } =
     Maybe.map4
         (\a b c d ->
-            { startDate = a
+            { index = 0
+            , selected = False
+            , startDate = a
             , endDate = b
             , minAge = c
             , maxAge = d
