@@ -83,7 +83,7 @@ toAd { startDate, endDate, minAge, maxAge } =
             , endDate = b
             , minAge = c
             , maxAge = d
-            , ton = Standard
+            , ton = if d < 12 then Standard else Funky
             }
         )
         startDate
@@ -155,13 +155,19 @@ update msg model =
                             ListingData { adListing | state = newState }
             in
             ( newAdListing, Cmd.batch [ updateCustomTable False, Cmd.map CustomTableMsg newCmd ] )
-        Valid adInput -> (GeneratedAd <| transform <| validate adValidator adInput, Cmd.none)
+        Valid adInput -> ((GeneratedAd << transform << (validate adValidator)) adInput, Cmd.none)
 
 transform : Result (List FieldError) (Valid AdInput) -> String 
 transform result =
     case result of 
-        Ok addInput -> "good stuff"
+        Ok adInput -> textify |> toAd adInput
         Err list -> "Something bad happened here"
+
+textify Ad -> String 
+textify ad = 
+    case ad.ton of
+        Standard -> String.concat ["Standard ad for your kids aged from ", ad.minAge, " to ", ad.maxAge]
+        Funky -> String.concat ["Amazing sejour for youth from ", ad.minAge, " to ", ad.maxAge]
 
 -- SUBSCRIPTIONS
 
