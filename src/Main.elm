@@ -1,10 +1,17 @@
 module Main exposing (main)
 
 import Browser
+import CustomListing exposing (..)
+import CustomTable.CustomTable as CustomTable
+import CustomTable.CustomTableType as CustomTableType exposing (Msg(..))
+import DataSet exposing (..)
 import Date exposing (Date)
-import Html exposing (Html, pre, text)
+import Html exposing (Html, div, pre, text)
+import Html.Attributes exposing (style)
 import Http
 import Validate exposing (Validator, ifBlank, ifTrue, validate)
+import Model exposing (..)
+import Ports exposing (scrolledTo, updateCustomTable)
 
 
 
@@ -23,34 +30,6 @@ main =
 
 -- MODEL
 
-
-type Ton
-    = Standard
-    | Funky
-
-
-type alias AdInput =
-    { startDate : Maybe Date
-    , endDate : Maybe Date
-    , minAge : Maybe Int
-    , maxAge : Maybe Int
-    }
-
-
-type alias Ad =
-    { startDate : Date
-    , endDate : Date
-    , minAge : Int
-    , maxAge : Int
-    , ton : Ton
-    }
-
-
-type Model
-    = CreationForm AdInput
-    | Listing (List Ad)
-
-
 initialAdInput =
     { startDate = Nothing
     , endDate = Nothing
@@ -59,9 +38,9 @@ initialAdInput =
     }
 
 
-init : () -> ( Model, Cmd Msg )
+init : () -> ( Model.Model, Cmd Model.Msg )
 init _ =
-    ( CreationForm initialAdInput
+    ( ListingData testAdListing
     , Cmd.none
     )
 
@@ -114,35 +93,87 @@ toAd { startDate, endDate, minAge, maxAge } =
 -- UPDATE
 
 
-type Msg
-    = NoOp
-
-
-update : Msg -> Model -> ( Model, Cmd Msg )
+update : Model.Msg -> Model.Model -> ( Model.Model, Cmd Model.Msg )
 update msg model =
     case msg of
         NoOp ->
             ( model, Cmd.none )
+
+        Model.ScrolledTo scrollEvent ->
+            update (CustomTableMsg <| CustomTableType.ScrolledTo scrollEvent) model
+
+        CustomTableMsg customTableMsg ->
+            let
+                adListing =
+                    case model of
+                        ListingData value ->
+                            value
+
+                        _ ->
+                            emptyAdListing
+
+                ( newState, newCmd ) =
+                    CustomTable.update customTableMsg adListing.state
+
+                newAdListing =
+                    case customTableMsg of
+                        Select index ->
+                            ListingData
+                                { adListing
+                                    | data =
+                                        List.map
+                                            (\item ->
+                                                if item.index == index then
+                                                    { item | selected = not item.selected }
+
+                                                else
+                                                    item
+                                            )
+                                            adListing.data
+                                }
+
+                        SelectAll value filteredIndex ->
+                            ListingData
+                                { adListing
+                                    | data =
+                                        List.map
+                                            (\item ->
+                                                if List.member item.index filteredIndex then
+                                                    { item | selected = value }
+
+                                                else
+                                                    item
+                                            )
+                                            adListing.data
+                                    , state = newState
+                                }
+
+                        _ ->
+                            ListingData { adListing | state = newState }
+            in
+            ( newAdListing, Cmd.batch [ updateCustomTable False, Cmd.map CustomTableMsg newCmd ] )
 
 
 
 -- SUBSCRIPTIONS
 
 
-subscriptions : Model -> Sub Msg
+subscriptions : Model.Model -> Sub Model.Msg
 subscriptions model =
-    Sub.none
+    Sub.batch
+        [ scrolledTo Model.ScrolledTo
+        ]
 
 
 
 -- VIEW
 
 
-view : Model -> Html Msg
+view : Model.Model -> Html Model.Msg
 view model =
     case model of
         CreationForm adInput ->
             Html.text "Input Form"
 
-        Listing adListing ->
-            Html.text "Go Thomas :)"
+        ListingData adListing ->
+            div [ style "height" "90vh" ] [ Html.map CustomTableMsg <| CustomTable.view adListing.state (customTableModel adListing) ]
