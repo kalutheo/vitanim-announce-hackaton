@@ -50,14 +50,18 @@ type Msg
     = NoOp
     | ScrolledTo CustomTableType.ScrollEvent
     | CustomTableMsg (CustomTableType.Msg Msg)
-    | Validated AdInput 
+    | Validated AdInput
     | ChangeField Field String
+    | ViewList
+    | AddAd
+
 
 type Field
     = StartDate
     | EndDate
     | MinAge
     | MaxAge
+
 
 type alias FieldError =
     ( Field, String )
