@@ -61,12 +61,19 @@ updateAdInputByField field value adInput =
     case field of
         StartDate ->
             Date.fromIsoString value
-                |> Result.map (\date -> { adInput | startDate = Just date })
+                |> Result.map
+                    (\date ->
+                        let
+                            _ =
+                                Debug.log "date" (Date.toIsoString date)
+                        in
+                        { adInput | startDate = Just date }
+                    )
                 |> Result.withDefault adInput
 
         EndDate ->
             Date.fromIsoString value
-                |> Result.map (\date -> { adInput | startDate = Just date })
+                |> Result.map (\date -> { adInput | endDate = Just date })
                 |> Result.withDefault adInput
 
         MinAge ->

@@ -54,7 +54,19 @@ adValidator =
     Validate.all
         [ ifTrue
             (\{ startDate, endDate } ->
-                Maybe.map2 (\a b -> True) startDate endDate
+                Maybe.map2
+                    (\a b ->
+                        let
+                            _ =
+                                Debug.log "adValidator A" a
+
+                            _ =
+                                Debug.log "adValidator B" b
+                        in
+                        False
+                    )
+                    startDate
+                    endDate
                     |> Maybe.withDefault False
             )
             ( StartDate, "endDate must be later than startDate" )
@@ -162,6 +174,10 @@ update msg model =
             ( newAdListing, Cmd.batch [ updateCustomTable False, Cmd.map CustomTableMsg newCmd ] )
 
         Validated adInput ->
+            let
+                _ =
+                    Debug.log "Validated" adInput
+            in
             ( (GeneratedAd << transform << validate adValidator) adInput, Cmd.none )
 
 
