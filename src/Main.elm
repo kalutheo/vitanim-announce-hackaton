@@ -228,11 +228,8 @@ view model =
 
         ListingData adListing ->
             div [ style "height" "90vh" ] [ Html.map CustomTableMsg <| CustomTable.view adListing.state (customTableModel adListing) ]
-<<<<<<< HEAD
 
         GeneratedAd ad ->
             Html.text ad
-=======
->>>>>>> origin/feat-ui-css
     )
         |> viewLayout
