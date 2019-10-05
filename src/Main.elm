@@ -4,6 +4,7 @@ import Browser
 import Date exposing (Date)
 import Html exposing (Html, pre, text)
 import Http
+import Validate exposing (Validator, ifBlank, ifTrue, validate)
 
 
 
@@ -23,7 +24,7 @@ main =
 -- MODEL
 
 
-type Thematic
+type Ton
     = Standard
     | Funky
 
@@ -31,7 +32,6 @@ type Thematic
 type alias AdInput =
     { startDate : Maybe Date
     , endDate : Maybe Date
-    , thematic : Maybe Thematic
     , minAge : Maybe Int
     , maxAge : Maybe Int
     }
@@ -42,7 +42,7 @@ type alias Ad =
     , endDate : Date
     , minAge : Int
     , maxAge : Int
-    , thematic : Thematic
+    , ton : Ton
     }
 
 
@@ -54,7 +54,6 @@ type Model
 initialAdInput =
     { startDate = Nothing
     , endDate = Nothing
-    , thematic = Nothing
     , minAge = Nothing
     , maxAge = Nothing
     }
@@ -65,6 +64,50 @@ init _ =
     ( CreationForm initialAdInput
     , Cmd.none
     )
+
+
+type Field
+    = StartDate
+    | EndDate
+    | MinAge
+    | MaxAge
+
+
+type alias FieldError =
+    ( Field, String )
+
+
+adValidator : Validator FieldError AdInput
+adValidator =
+    Validate.all
+        [ ifTrue
+            (\{ startDate, endDate } ->
+                Maybe.map2 (\a b -> True) startDate endDate
+                    |> Maybe.withDefault False
+            )
+            ( StartDate, "endDate must be later than startDate" )
+        ]
+
+
+
+-- case validate adValidator adInput of
+
+
+toAd : AdInput -> Maybe Ad
+toAd { startDate, endDate, minAge, maxAge } =
+    Maybe.map4
+        (\a b c d ->
+            { startDate = a
+            , endDate = b
+            , minAge = c
+            , maxAge = d
+            , ton = Standard
+            }
+        )
+        startDate
+        endDate
+        minAge
+        maxAge
 
 
 
