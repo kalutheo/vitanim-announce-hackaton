@@ -88,9 +88,9 @@ columns data =
     ]
 
 
-customTableModel : Listing -> CustomTableType.Model Ad Model.Msg
+customTableModel : Model.Model -> CustomTableType.Model Ad Model.Msg
 customTableModel model =
-    CustomTable.init model.state
+    CustomTable.init model.tableState
         (getListItems model.data)
         (config model.data)
         False
