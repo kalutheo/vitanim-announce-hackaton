@@ -7,13 +7,13 @@ import CustomTable.CustomTableType as CustomTableType exposing (Msg(..))
 import DataSet exposing (..)
 import Date exposing (Date)
 import Form
-import Html exposing (Html, div, pre, text)
-import Html.Attributes exposing (style)
+import Html exposing (Html, div, header, pre, span, text)
+import Html.Attributes exposing (class, style)
 import Http
 import Model exposing (..)
 import Ports exposing (scrolledTo, updateCustomTable)
-import Validate exposing (Validator, ifBlank, ifTrue, validate, Valid, fromValid)
 import Time exposing (Month(..))
+import Validate exposing (Valid, Validator, fromValid, ifBlank, ifTrue, validate)
 
 
 
@@ -75,7 +75,12 @@ toAd { startDate, endDate, minAge, maxAge } =
             , endDate = b
             , minAge = c
             , maxAge = d
-            , ton = if d < 12 then Standard else Funky
+            , ton =
+                if d < 12 then
+                    Standard
+
+                else
+                    Funky
             }
         )
         startDate
@@ -155,30 +160,43 @@ update msg model =
                             ListingData { adListing | state = newState }
             in
             ( newAdListing, Cmd.batch [ updateCustomTable False, Cmd.map CustomTableMsg newCmd ] )
-        Validated adInput -> ((GeneratedAd << transform << (validate adValidator)) adInput, Cmd.none)
 
-transform : Result (List FieldError) (Valid AdInput) -> String 
+        Validated adInput ->
+            ( (GeneratedAd << transform << validate adValidator) adInput, Cmd.none )
+
+
+transform : Result (List FieldError) (Valid AdInput) -> String
 transform result =
-    case result of 
-        Ok value -> textify (Maybe.withDefault defaultAd <| toAd (fromValid value))
-        Err list -> "Something bad happened here"
+    case result of
+        Ok value ->
+            textify (Maybe.withDefault defaultAd <| toAd (fromValid value))
+
+        Err list ->
+            "Something bad happened here"
+
 
 defaultAd : Ad
 defaultAd =
     { index = 0
-        , selected = False
-        , startDate = Date.fromCalendarDate 2000 Sep 27
-        , endDate = Date.fromCalendarDate 2019 Sep 27
-        , minAge = 0
-        , maxAge = 100
-        , ton = Standard
+    , selected = False
+    , startDate = Date.fromCalendarDate 2000 Sep 27
+    , endDate = Date.fromCalendarDate 2019 Sep 27
+    , minAge = 0
+    , maxAge = 100
+    , ton = Standard
     }
 
-textify : Ad -> String 
-textify ad = 
+
+textify : Ad -> String
+textify ad =
     case ad.ton of
-        Standard -> String.concat ["Standard ad for your kids aged from ", String.fromInt ad.minAge, " to ", String.fromInt ad.maxAge]
-        Funky -> String.concat ["Amazing sejour for youth from ", String.fromInt ad.minAge, " to ", String.fromInt ad.maxAge]
+        Standard ->
+            String.concat [ "Standard ad for your kids aged from ", String.fromInt ad.minAge, " to ", String.fromInt ad.maxAge ]
+
+        Funky ->
+            String.concat [ "Amazing sejour for youth from ", String.fromInt ad.minAge, " to ", String.fromInt ad.maxAge ]
+
+
 
 -- SUBSCRIPTIONS
 
@@ -194,14 +212,24 @@ subscriptions model =
 -- VIEW
 
 
+viewLayout : Html Model.Msg -> Html Model.Msg
+viewLayout content =
+    Html.div []
+        [ header [ class "w-full bg-gray-800 p-4 " ] [ span [ class "ml-1 font-sans text-xs text-gray-400" ] [ text "Vitanim Ad Generator" ] ]
+        , content
+        ]
+
+
 view : Model.Model -> Html Model.Msg
 view model =
-    case model of
+    (case model of
         CreationForm adInput ->
             Form.view adInput
 
         ListingData adListing ->
             div [ style "height" "90vh" ] [ Html.map CustomTableMsg <| CustomTable.view adListing.state (customTableModel adListing) ]
 
-        GeneratedAd ad -> 
-            Html.text ad 
+        GeneratedAd ad ->
+            Html.text ad
+    )
+        |> viewLayout

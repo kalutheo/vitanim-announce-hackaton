@@ -6,13 +6,15 @@
     "start": "parcel src/index.html",
     "build": "rm -r dist && parcel build src/index.html --public-url ./",
     "test": "elm-test",
-    "autotest": "elm-test --watch"
+    "autotest": "elm-test --watch",
+    "explorer": "elm-live src/Explorer.elm --open --dir=public/explorer -- --output=public/explorer/explorer.js"
   },
   "dependencies": {},
   "devDependencies": {
     "elm": "^0.19.0-no-deps",
     "elm-debug-transformer": "0.0.7",
     "elm-hot": "^1.1.2",
+    "elm-live": "^4.0.0",
     "elm-test": "^0.19.0-rev6",
     "node-elm-compiler": "^5.0.4",
     "parcel-bundler": "^1.12.0"
