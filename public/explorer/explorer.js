@@ -5113,7 +5113,7 @@ var author$project$Form$view = A2(
 					elm$html$Html$div,
 					_List_fromArray(
 						[
-							elm$html$Html$Attributes$class('float-right block')
+							elm$html$Html$Attributes$class('float-right mt-4')
 						]),
 					_List_fromArray(
 						[author$project$Form$customButton]))

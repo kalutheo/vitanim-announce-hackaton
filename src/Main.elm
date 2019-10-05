@@ -7,8 +7,8 @@ import CustomTable.CustomTableType as CustomTableType exposing (Msg(..))
 import DataSet exposing (..)
 import Date exposing (Date)
 import Form
-import Html exposing (Html, div, pre, text)
-import Html.Attributes exposing (style)
+import Html exposing (Html, div, header, pre, span, text)
+import Html.Attributes exposing (class, style)
 import Http
 import Model exposing (..)
 import Ports exposing (scrolledTo, updateCustomTable)
@@ -194,14 +194,27 @@ subscriptions model =
 -- VIEW
 
 
+viewLayout : Html Model.Msg -> Html Model.Msg
+viewLayout content =
+    Html.div []
+        [ header [ class "w-full bg-gray-800 p-4 " ] [ span [ class "ml-1 font-sans text-xs text-gray-400" ] [ text "Vitanim Ad Generator" ] ]
+        , content
+        ]
+
+
 view : Model.Model -> Html Model.Msg
 view model =
-    case model of
+    (case model of
         CreationForm adInput ->
             Form.view adInput
 
         ListingData adListing ->
             div [ style "height" "90vh" ] [ Html.map CustomTableMsg <| CustomTable.view adListing.state (customTableModel adListing) ]
+<<<<<<< HEAD
 
         GeneratedAd ad -> 
             Html.text ad 
+=======
+    )
+        |> viewLayout
+>>>>>>> fix(ui): add some margin
