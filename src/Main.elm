@@ -56,13 +56,6 @@ adValidator =
             (\{ startDate, endDate } ->
                 Maybe.map2
                     (\a b ->
-                        let
-                            _ =
-                                Debug.log "adValidator A" a
-
-                            _ =
-                                Debug.log "adValidator B" b
-                        in
                         False
                     )
                     startDate
@@ -87,12 +80,7 @@ toAd { startDate, endDate, minAge, maxAge } =
             , endDate = b
             , minAge = c
             , maxAge = d
-            , ton =
-                if d < 12 then
-                    Standard
-
-                else
-                    Funky
+            , ton = Funky
             }
         )
         startDate
@@ -207,10 +195,29 @@ textify : Ad -> String
 textify ad =
     case ad.ton of
         Standard ->
-            String.concat [ "Standard ad for your kids aged from ", String.fromInt ad.minAge, " to ", String.fromInt ad.maxAge ]
+            String.concat
+                [ "Standard ad for your kids aged from "
+                , String.fromInt ad.minAge
+                , " to "
+                , String.fromInt ad.maxAge
+                ]
 
         Funky ->
-            String.concat [ "Amazing sejour for youth from ", String.fromInt ad.minAge, " to ", String.fromInt ad.maxAge ]
+            String.concat
+                [ "Amazing sejour for youth from "
+                , String.fromInt ad.minAge
+                , " to "
+                , String.fromInt ad.maxAge
+                , "La célèbre école de sorcellerie"
+                , " Poudulard a le plaisir d'ouvrir les candidatures pour un poste d'enseignant polyvalent à pourvoir du "
+                , ad.startDate
+                    |> Date.toIsoString
+                , " au "
+                , ad.endDate
+                    |> Date.toIsoString
+                , " Il s'agit d'un stage d'apprentissage accéléré de la magie pour une quinzaine de jeunes sorciers débutants,"
+                , " de 8 à 12 ans."
+                ]
 
 
 
