@@ -43,21 +43,21 @@ emptyAdListing =
 type Model
     = CreationForm AdInput
     | ListingData Listing
+    | GeneratedAd String
 
 
 type Msg
     = NoOp
     | ScrolledTo CustomTableType.ScrollEvent
     | CustomTableMsg (CustomTableType.Msg Msg)
+    | Validated AdInput 
     | ChangeField Field String
-
 
 type Field
     = StartDate
     | EndDate
     | MinAge
     | MaxAge
-
 
 type alias FieldError =
     ( Field, String )

@@ -12,7 +12,8 @@ import Html.Attributes exposing (style)
 import Http
 import Model exposing (..)
 import Ports exposing (scrolledTo, updateCustomTable)
-import Validate exposing (Validator, ifBlank, ifTrue, validate)
+import Validate exposing (Validator, ifBlank, ifTrue, validate, Valid, fromValid)
+import Time exposing (Month(..))
 
 
 
@@ -74,7 +75,7 @@ toAd { startDate, endDate, minAge, maxAge } =
             , endDate = b
             , minAge = c
             , maxAge = d
-            , ton = Standard
+            , ton = if d < 12 then Standard else Funky
             }
         )
         startDate
@@ -154,8 +155,30 @@ update msg model =
                             ListingData { adListing | state = newState }
             in
             ( newAdListing, Cmd.batch [ updateCustomTable False, Cmd.map CustomTableMsg newCmd ] )
+        Validated adInput -> ((GeneratedAd << transform << (validate adValidator)) adInput, Cmd.none)
 
+transform : Result (List FieldError) (Valid AdInput) -> String 
+transform result =
+    case result of 
+        Ok value -> textify (Maybe.withDefault defaultAd <| toAd (fromValid value))
+        Err list -> "Something bad happened here"
 
+defaultAd : Ad
+defaultAd =
+    { index = 0
+        , selected = False
+        , startDate = Date.fromCalendarDate 2000 Sep 27
+        , endDate = Date.fromCalendarDate 2019 Sep 27
+        , minAge = 0
+        , maxAge = 100
+        , ton = Standard
+    }
+
+textify : Ad -> String 
+textify ad = 
+    case ad.ton of
+        Standard -> String.concat ["Standard ad for your kids aged from ", String.fromInt ad.minAge, " to ", String.fromInt ad.maxAge]
+        Funky -> String.concat ["Amazing sejour for youth from ", String.fromInt ad.minAge, " to ", String.fromInt ad.maxAge]
 
 -- SUBSCRIPTIONS
 
@@ -175,7 +198,10 @@ view : Model.Model -> Html Model.Msg
 view model =
     case model of
         CreationForm adInput ->
-            Form.view
+            Form.view adInput
 
         ListingData adListing ->
             div [ style "height" "90vh" ] [ Html.map CustomTableMsg <| CustomTable.view adListing.state (customTableModel adListing) ]
+
+        GeneratedAd ad -> 
+            Html.text ad 
