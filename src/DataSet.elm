@@ -15,7 +15,7 @@ testAdListing =
           , endDate = Date.fromCalendarDate 2018 Sep 27
           , minAge = 6
           , maxAge = 7
-          , thematic = Funky
+          , ton = Funky
           }
         , { index = 1
           , selected = False
@@ -23,7 +23,7 @@ testAdListing =
           , endDate = Date.fromCalendarDate 2018 Sep 27
           , minAge = 6
           , maxAge = 7
-          , thematic = Funky
+          , ton = Funky
           }
         , { index = 2
           , selected = False
@@ -31,7 +31,7 @@ testAdListing =
           , endDate = Date.fromCalendarDate 2018 Sep 27
           , minAge = 6
           , maxAge = 7
-          , thematic = Funky
+          , ton = Funky
           }
         , { index = 3
           , selected = False
@@ -39,7 +39,7 @@ testAdListing =
           , endDate = Date.fromCalendarDate 2018 Sep 27
           , minAge = 6
           , maxAge = 7
-          , thematic = Funky
+          , ton = Funky
           }
         , { index = 4
           , selected = False
@@ -47,7 +47,7 @@ testAdListing =
           , endDate = Date.fromCalendarDate 2018 Sep 27
           , minAge = 6
           , maxAge = 7
-          , thematic = Funky
+          , ton = Funky
           }
         , { index = 5
           , selected = False
@@ -55,7 +55,7 @@ testAdListing =
           , endDate = Date.fromCalendarDate 2018 Sep 27
           , minAge = 6
           , maxAge = 7
-          , thematic = Funky
+          , ton = Funky
           }
         , { index = 6
           , selected = False
@@ -63,7 +63,7 @@ testAdListing =
           , endDate = Date.fromCalendarDate 2018 Sep 27
           , minAge = 6
           , maxAge = 7
-          , thematic = Funky
+          , ton = Funky
           }
         , { index = 7
           , selected = False
@@ -71,7 +71,7 @@ testAdListing =
           , endDate = Date.fromCalendarDate 2018 Sep 27
           , minAge = 6
           , maxAge = 7
-          , thematic = Funky
+          , ton = Funky
           }
         , { index = 8
           , selected = False
@@ -79,7 +79,7 @@ testAdListing =
           , endDate = Date.fromCalendarDate 2018 Sep 27
           , minAge = 6
           , maxAge = 7
-          , thematic = Funky
+          , ton = Funky
           }
         , { index = 9
           , selected = False
@@ -87,7 +87,7 @@ testAdListing =
           , endDate = Date.fromCalendarDate 2018 Sep 27
           , minAge = 6
           , maxAge = 7
-          , thematic = Funky
+          , ton = Funky
           }
         , { index = 10
           , selected = False
@@ -95,7 +95,7 @@ testAdListing =
           , endDate = Date.fromCalendarDate 2018 Sep 27
           , minAge = 6
           , maxAge = 7
-          , thematic = Funky
+          , ton = Funky
           }
         , { index = 11
           , selected = False
@@ -103,7 +103,7 @@ testAdListing =
           , endDate = Date.fromCalendarDate 2018 Sep 27
           , minAge = 6
           , maxAge = 7
-          , thematic = Funky
+          , ton = Funky
           }
         , { index = 12
           , selected = False
@@ -111,7 +111,7 @@ testAdListing =
           , endDate = Date.fromCalendarDate 2018 Sep 27
           , minAge = 6
           , maxAge = 7
-          , thematic = Funky
+          , ton = Funky
           }
         , { index = 13
           , selected = False
@@ -119,7 +119,7 @@ testAdListing =
           , endDate = Date.fromCalendarDate 2018 Sep 27
           , minAge = 6
           , maxAge = 7
-          , thematic = Funky
+          , ton = Funky
           }
         , { index = 14
           , selected = False
@@ -127,7 +127,7 @@ testAdListing =
           , endDate = Date.fromCalendarDate 2018 Sep 27
           , minAge = 6
           , maxAge = 7
-          , thematic = Funky
+          , ton = Funky
           }
         , { index = 15
           , selected = False
@@ -135,7 +135,7 @@ testAdListing =
           , endDate = Date.fromCalendarDate 2018 Sep 27
           , minAge = 6
           , maxAge = 7
-          , thematic = Funky
+          , ton = Funky
           }
         , { index = 16
           , selected = False
@@ -143,7 +143,7 @@ testAdListing =
           , endDate = Date.fromCalendarDate 2018 Sep 27
           , minAge = 6
           , maxAge = 7
-          , thematic = Funky
+          , ton = Funky
           }
         , { index = 17
           , selected = False
@@ -151,7 +151,7 @@ testAdListing =
           , endDate = Date.fromCalendarDate 2018 Sep 27
           , minAge = 6
           , maxAge = 7
-          , thematic = Funky
+          , ton = Funky
           }
         , { index = 18
           , selected = False
@@ -159,7 +159,7 @@ testAdListing =
           , endDate = Date.fromCalendarDate 2018 Sep 27
           , minAge = 6
           , maxAge = 7
-          , thematic = Funky
+          , ton = Funky
           }
         ]
     }

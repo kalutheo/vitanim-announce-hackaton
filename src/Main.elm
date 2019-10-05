@@ -11,7 +11,7 @@ import Html.Attributes exposing (style)
 import Http
 import Model exposing (..)
 import Ports exposing (scrolledTo, updateCustomTable)
-import Time exposing (Month(..))
+import Validate exposing (Validator, ifBlank, ifTrue, validate)
 
 
 
@@ -34,7 +34,6 @@ main =
 initialAdInput =
     { startDate = Nothing
     , endDate = Nothing
-    , thematic = Nothing
     , minAge = Nothing
     , maxAge = Nothing
     }
@@ -45,6 +44,52 @@ init _ =
     ( ListingData testAdListing
     , Cmd.none
     )
+
+
+type Field
+    = StartDate
+    | EndDate
+    | MinAge
+    | MaxAge
+
+
+type alias FieldError =
+    ( Field, String )
+
+
+adValidator : Validator FieldError AdInput
+adValidator =
+    Validate.all
+        [ ifTrue
+            (\{ startDate, endDate } ->
+                Maybe.map2 (\a b -> True) startDate endDate
+                    |> Maybe.withDefault False
+            )
+            ( StartDate, "endDate must be later than startDate" )
+        ]
+
+
+
+-- case validate adValidator adInput of
+
+
+toAd : AdInput -> Maybe Ad
+toAd { startDate, endDate, minAge, maxAge } =
+    Maybe.map4
+        (\a b c d ->
+            { index = 0
+            , selected = False
+            , startDate = a
+            , endDate = b
+            , minAge = c
+            , maxAge = d
+            , ton = Standard
+            }
+        )
+        startDate
+        endDate
+        minAge
+        maxAge
 
 
 

@@ -1,4 +1,4 @@
-module CustomListing exposing (columns, config, customTableModel, getListItems, thematicToString)
+module CustomListing exposing (columns, config, customTableModel, getListItems, tonToString)
 
 import CustomTable.CustomTable as CustomTable exposing (init, initState, renderInt, renderString, update, view)
 import CustomTable.CustomTableType as CustomTableType exposing (Accessor(..), Column, Config, Filter(..), Item, Model, Msg(..), State, ValueFilter(..))
@@ -11,9 +11,9 @@ getListItems data =
     data
 
 
-thematicToString : Thematic -> String
-thematicToString thematic =
-    case thematic of
+tonToString : Ton -> String
+tonToString ton =
+    case ton of
         Standard ->
             "Standard"
 
@@ -75,15 +75,15 @@ columns data =
       , render = renderInt .maxAge
       }
     , { properties =
-            { id = "thematic"
+            { id = "ton"
             , sortable = True
-            , title = String.toUpper "thematic"
+            , title = String.toUpper "ton"
             , visible = True
             }
       , filter = ValueFilter
-      , dataForFilter = StringValueFilter <| List.map (\item -> thematicToString item.thematic) data
-      , accessor = GetString (\item -> thematicToString item.thematic)
-      , render = renderString (\item -> thematicToString item.thematic)
+      , dataForFilter = StringValueFilter <| List.map (\item -> tonToString item.ton) data
+      , accessor = GetString (\item -> tonToString item.ton)
+      , render = renderString (\item -> tonToString item.ton)
       }
     ]
 
