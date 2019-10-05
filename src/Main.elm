@@ -84,7 +84,7 @@ toAd { startDate, endDate, minAge, maxAge } =
             , endDate = b
             , minAge = c
             , maxAge = d
-            , ton = Standard
+            , ton = Funky
             }
         )
         startDate
