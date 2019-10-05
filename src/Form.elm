@@ -50,7 +50,7 @@ view =
                 , div [] [ customInput "number" "max age" (ChangeField MaxAge) ]
                 ]
             ]
-        , viewFieldRow [ div [ class "float-right block" ] [ customButton ] ]
+        , viewFieldRow [ div [ class "float-right mt-4" ] [ customButton ] ]
         ]
 
 
