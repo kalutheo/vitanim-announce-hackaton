@@ -6,6 +6,7 @@ import CustomTable.CustomTable as CustomTable
 import CustomTable.CustomTableType as CustomTableType exposing (Msg(..))
 import DataSet exposing (..)
 import Date exposing (Date)
+import Form
 import Html exposing (Html, div, pre, text)
 import Html.Attributes exposing (style)
 import Http
@@ -41,20 +42,10 @@ initialAdInput =
 
 init : () -> ( Model.Model, Cmd Model.Msg )
 init _ =
-    ( ListingData testAdListing
+    ( -- ListingData testAdListing
+      CreationForm initialAdInput
     , Cmd.none
     )
-
-
-type Field
-    = StartDate
-    | EndDate
-    | MinAge
-    | MaxAge
-
-
-type alias FieldError =
-    ( Field, String )
 
 
 adValidator : Validator FieldError AdInput
@@ -101,6 +92,14 @@ update msg model =
     case msg of
         NoOp ->
             ( model, Cmd.none )
+
+        ChangeField field value ->
+            case model of
+                CreationForm adInput ->
+                    ( CreationForm (Form.updateAdInputByField field value adInput), Cmd.none )
+
+                _ ->
+                    ( model, Cmd.none )
 
         Model.ScrolledTo scrollEvent ->
             update (CustomTableMsg <| CustomTableType.ScrolledTo scrollEvent) model
@@ -176,7 +175,7 @@ view : Model.Model -> Html Model.Msg
 view model =
     case model of
         CreationForm adInput ->
-            Html.text "Input Form"
+            Form.view
 
         ListingData adListing ->
             div [ style "height" "90vh" ] [ Html.map CustomTableMsg <| CustomTable.view adListing.state (customTableModel adListing) ]
