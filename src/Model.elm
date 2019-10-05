@@ -1,4 +1,4 @@
-module Model exposing (Ad, AdInput, Field(..), FieldError, Listing, Model(..), Msg(..), Ton(..), emptyAdListing)
+module Model exposing (Ad, AdInput, Field(..), FieldError, Listing, Model, Msg(..), Page(..), Ton(..), emptyAdListing)
 
 import CustomTable.CustomTable as CustomTable exposing (initState)
 import CustomTable.CustomTableType as CustomTableType exposing (Accessor(..), Column, Config, Filter(..), Item, Model, Msg(..), State, ValueFilter(..))
@@ -40,9 +40,16 @@ emptyAdListing =
     Listing (CustomTable.initState -1) []
 
 
-type Model
+type alias Model =
+    { data : List Ad
+    , tableState : CustomTableType.State
+    , page : Page
+    }
+
+
+type Page
     = CreationForm AdInput
-    | ListingData Listing
+    | ViewTable
     | GeneratedAd String
 
 

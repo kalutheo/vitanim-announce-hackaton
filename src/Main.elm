@@ -45,7 +45,10 @@ initialAdInput =
 init : () -> ( Model.Model, Cmd Model.Msg )
 init _ =
     ( -- ListingData testAdListing
-      CreationForm initialAdInput
+      { data = []
+      , tableState = CustomTable.initState -1
+      , page = CreationForm initialAdInput
+      }
     , Cmd.none
     )
 
@@ -101,77 +104,76 @@ update msg model =
             ( model, Cmd.none )
 
         ChangeField field value ->
-            case model of
+            case model.page of
                 CreationForm adInput ->
-                    ( CreationForm (Form.updateAdInputByField field value adInput), Cmd.none )
+                    ( { model | page = CreationForm (Form.updateAdInputByField field value adInput) }, Cmd.none )
 
                 _ ->
                     ( model, Cmd.none )
 
         AddAd ->
-            ( CreationForm initialAdInput
+            ( { model | page = CreationForm initialAdInput }
             , Cmd.none
             )
 
         ViewList ->
-            ( ListingData { data = [], state = CustomTable.initState -1 }, Cmd.none )
+            ( { model | page = ViewTable }, Cmd.none )
 
         Model.ScrolledTo scrollEvent ->
             update (CustomTableMsg <| CustomTableType.ScrolledTo scrollEvent) model
 
         CustomTableMsg customTableMsg ->
             let
-                adListing =
-                    case model of
-                        ListingData value ->
-                            value
-
-                        _ ->
-                            emptyAdListing
-
                 ( newState, newCmd ) =
-                    CustomTable.update customTableMsg adListing.state
+                    CustomTable.update customTableMsg model.tableState
 
-                newAdListing =
+                newModel =
                     case customTableMsg of
                         Select index ->
-                            ListingData
-                                { adListing
-                                    | data =
-                                        List.map
-                                            (\item ->
-                                                if item.index == index then
-                                                    { item | selected = not item.selected }
+                            { model
+                                | data =
+                                    List.map
+                                        (\item ->
+                                            if item.index == index then
+                                                { item | selected = not item.selected }
 
-                                                else
-                                                    item
-                                            )
-                                            adListing.data
-                                }
+                                            else
+                                                item
+                                        )
+                                        model.data
+                            }
 
                         SelectAll value filteredIndex ->
-                            ListingData
-                                { adListing
-                                    | data =
-                                        List.map
-                                            (\item ->
-                                                if List.member item.index filteredIndex then
-                                                    { item | selected = value }
+                            { model
+                                | data =
+                                    List.map
+                                        (\item ->
+                                            if List.member item.index filteredIndex then
+                                                { item | selected = value }
 
-                                                else
-                                                    item
-                                            )
-                                            adListing.data
-                                    , state = newState
-                                }
+                                            else
+                                                item
+                                        )
+                                        model.data
+                                , tableState = newState
+                            }
 
                         _ ->
-                            ListingData { adListing | state = newState }
+                            { model | tableState = newState }
             in
-            ( newAdListing, Cmd.batch [ updateCustomTable False, Cmd.map CustomTableMsg newCmd ] )
+            ( newModel, Cmd.batch [ updateCustomTable False, Cmd.map CustomTableMsg newCmd ] )
 
         Validated adInput ->
-            ( (GeneratedAd << transform << validate adValidator) adInput, Cmd.none )
+            let
+                newData =
+                    case toAd adInput of
+                        Just a ->
+                            a :: model.data
+
+                        Nothing ->
+                            model.data
+            in
+            ( { model | data = List.indexedMap (\i a -> { a | index = i }) newData, page = (GeneratedAd << transform << validate adValidator) adInput }, Cmd.none )
 
 
 transform : Result (List FieldError) (Valid AdInput) -> String
@@ -237,12 +239,12 @@ viewLayout content =
 
 view : Model.Model -> Html Model.Msg
 view model =
-    (case model of
+    (case model.page of
         CreationForm adInput ->
             Form.view adInput
 
-        ListingData adListing ->
-            div [ style "height" "90vh" ] [ Html.map CustomTableMsg <| CustomTable.view adListing.state (customTableModel adListing) ]
+        ViewTable ->
+            div [ style "height" "90vh" ] [ Html.map CustomTableMsg <| CustomTable.view model.tableState (customTableModel model) ]
 
         GeneratedAd ad ->
             Html.text ad
