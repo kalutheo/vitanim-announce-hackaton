@@ -1,4 +1,4 @@
-module Model exposing (Ad, AdInput, Listing, Model(..), Msg(..), Ton(..), emptyAdListing)
+module Model exposing (Ad, AdInput, Field(..), FieldError, Listing, Model(..), Msg(..), Ton(..), emptyAdListing)
 
 import CustomTable.CustomTable as CustomTable exposing (initState)
 import CustomTable.CustomTableType as CustomTableType exposing (Accessor(..), Column, Config, Filter(..), Item, Model, Msg(..), State, ValueFilter(..))
@@ -13,7 +13,6 @@ type Ton
 type alias AdInput =
     { startDate : Maybe Date
     , endDate : Maybe Date
-    , ton : Maybe Ton
     , minAge : Maybe Int
     , maxAge : Maybe Int
     }
@@ -50,3 +49,15 @@ type Msg
     = NoOp
     | ScrolledTo CustomTableType.ScrollEvent
     | CustomTableMsg (CustomTableType.Msg Msg)
+    | ChangeField Field String
+
+
+type Field
+    = StartDate
+    | EndDate
+    | MinAge
+    | MaxAge
+
+
+type alias FieldError =
+    ( Field, String )
