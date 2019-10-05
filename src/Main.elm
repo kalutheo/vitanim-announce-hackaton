@@ -84,7 +84,7 @@ toAd { startDate, endDate, minAge, maxAge } =
             , endDate = b
             , minAge = c
             , maxAge = d
-            , ton = Funky
+            , ton = Standard
             }
         )
         startDate
@@ -202,12 +202,13 @@ textify : Ad -> String
 textify ad =
     (case ad.ton of
         Standard ->
-            String.concat
-                [ "Standard ad for your kids aged from "
-                , String.fromInt ad.minAge
-                , " to "
-                , String.fromInt ad.maxAge
-                ]
+            """
+              Bonjour,
+
+              les candidatures pour un poste d'enseignant polyvalent est à pourvoir du ${startDate} au ${endDate}.
+
+              Les enfants ont entre  ${minAge} et ${maxAge} ans.
+              """
 
         Funky ->
             """
