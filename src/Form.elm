@@ -7,14 +7,14 @@ import Html.Events exposing (..)
 import Model exposing (..)
 
 
-view : Html Msg
-view =
-    Html.form []
+view : AdInput -> Html Msg
+view adInput =
+    Html.form [onSubmit <| Validated adInput]
         [ input [ onInput (ChangeField StartDate), type_ "date", placeholder "start date" ] []
         , input [ onInput (ChangeField EndDate), type_ "date", placeholder "end date" ] []
         , input [ onInput (ChangeField MinAge), type_ "number", placeholder "min age" ] []
         , input [ onInput (ChangeField MaxAge), type_ "number", placeholder "max age" ] []
-        , button [] [ text "Ok" ]
+        , button [ ] [ text "Ok" ]
         ]
 
 

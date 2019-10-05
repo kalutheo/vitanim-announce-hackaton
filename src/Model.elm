@@ -50,7 +50,7 @@ type Msg
     = NoOp
     | ScrolledTo CustomTableType.ScrollEvent
     | CustomTableMsg (CustomTableType.Msg Msg)
-    | Valid AdInput 
+    | Validated AdInput 
     | ChangeField Field String
 
 type Field
