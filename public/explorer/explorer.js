@@ -4994,7 +4994,7 @@ var author$project$Form$customTitle = function (titleText) {
 		elm$html$Html$span,
 		_List_fromArray(
 			[
-				elm$html$Html$Attributes$class('text-xl ml-2 font-sans text-gray-600')
+				elm$html$Html$Attributes$class('text-lg ml-2 font-sans text-gray-600')
 			]),
 		_List_fromArray(
 			[

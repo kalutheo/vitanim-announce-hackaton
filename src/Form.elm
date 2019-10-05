@@ -29,7 +29,7 @@ customButton =
 
 
 customTitle titleText =
-    span [ class "text-xl ml-2 font-sans text-gray-600" ] [ text titleText ]
+    span [ class "text-lg ml-2 font-sans text-gray-600" ] [ text titleText ]
 
 
 view : Html Msg
