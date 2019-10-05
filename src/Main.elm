@@ -200,7 +200,7 @@ defaultAd =
 
 textify : Ad -> String
 textify ad =
-    case ad.ton of
+    (case ad.ton of
         Standard ->
             String.concat
                 [ "Standard ad for your kids aged from "
@@ -210,21 +210,22 @@ textify ad =
                 ]
 
         Funky ->
-            String.concat
-                [ "Amazing sejour for youth from "
-                , String.fromInt ad.minAge
-                , " to "
-                , String.fromInt ad.maxAge
-                , "La célèbre école de sorcellerie"
-                , " Poudulard a le plaisir d'ouvrir les candidatures pour un poste d'enseignant polyvalent à pourvoir du "
-                , ad.startDate
-                    |> Date.toIsoString
-                , " au "
-                , ad.endDate
-                    |> Date.toIsoString
-                , " Il s'agit d'un stage d'apprentissage accéléré de la magie pour une quinzaine de jeunes sorciers débutants,"
-                , " de 8 à 12 ans."
-                ]
+            """
+            La célèbre école de sorcellerie Poudulard a le plaisir d'ouvrir les candidatures pour un poste d'enseignant polyvalent à pourvoir du ${startDate} au ${endDate}.
+
+            Il s'agit d'un stage d'apprentissage accéléré de la magie pour une quinzaine de jeunes sorciers débutants, de ${minAge} à ${maxAge} ans.
+            """
+    )
+        |> String.replace "${minAge}" (String.fromInt ad.minAge)
+        |> String.replace "${maxAge}" (String.fromInt ad.maxAge)
+        |> String.replace "${startDate}"
+            (ad.startDate
+                |> Date.toIsoString
+            )
+        |> String.replace "${endDate}"
+            (ad.endDate
+                |> Date.toIsoString
+            )
 
 
 
@@ -247,10 +248,10 @@ viewLayout content =
     Html.div []
         [ header [ class "w-full bg-gray-800 p-4 " ]
             [ span [ class "ml-1 font-sans text-xs text-gray-400" ]
-                [ button [ onClick AddAd ] [ text "Vitanim Ad Generator" ] ]
+                [ button [ onClick AddAd ] [ text "Créer une annonce" ] ]
             , span [ class "ml-1 font-sans text-xs text-gray-400" ] [ text "|" ]
             , span [ class "ml-1 font-sans text-xs text-gray-400" ]
-                [ button [ onClick ViewList ] [ text "View List" ] ]
+                [ button [ onClick ViewList ] [ text "Voir la liste des annonces" ] ]
             ]
         , content
         ]
@@ -266,6 +267,6 @@ view model =
             div [ style "height" "90vh" ] [ Html.map CustomTableMsg <| CustomTable.view model.tableState (customTableModel model) ]
 
         GeneratedAd ad ->
-            Html.text ad
+            Html.p [ class "text-gray-700 font-sans p-4 whitespace-pre-line", style "width" "600px" ] [ Html.text ad ]
     )
         |> viewLayout
