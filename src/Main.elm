@@ -1,7 +1,8 @@
 module Main exposing (main)
 
 import Browser
-import Html exposing (Html, text, pre)
+import Date exposing (Date)
+import Html exposing (Html, pre, text)
 import Http
 
 
@@ -10,32 +11,60 @@ import Http
 
 
 main =
-  Browser.element
-    { init = init
-    , update = update
-    , subscriptions = subscriptions
-    , view = view
-    }
+    Browser.element
+        { init = init
+        , update = update
+        , subscriptions = subscriptions
+        , view = view
+        }
 
 
 
 -- MODEL
 
 
+type Thematic
+    = Standard
+    | Funky
+
+
+type alias AdInput =
+    { startDate : Maybe Date
+    , endDate : Maybe Date
+    , thematic : Maybe Thematic
+    , minAge : Maybe Int
+    , maxAge : Maybe Int
+    }
+
+
+type alias Ad =
+    { startDate : Date
+    , endDate : Date
+    , minAge : Int
+    , maxAge : Int
+    , thematic : Thematic
+    }
+
+
 type Model
-  = Failure
-  | Loading
-  | Success String
+    = CreationForm AdInput
+    | Listing (List Ad)
 
 
-init : () -> (Model, Cmd Msg)
+initialAdInput =
+    { startDate = Nothing
+    , endDate = Nothing
+    , thematic = Nothing
+    , minAge = Nothing
+    , maxAge = Nothing
+    }
+
+
+init : () -> ( Model, Cmd Msg )
 init _ =
-  ( Loading
-  , Http.get
-      { url = "https://elm-lang.org/assets/public-opinion.txt"
-      , expect = Http.expectString GotText
-      }
-  )
+    ( CreationForm initialAdInput
+    , Cmd.none
+    )
 
 
 
@@ -43,19 +72,14 @@ init _ =
 
 
 type Msg
-  = GotText (Result Http.Error String)
+    = NoOp
 
 
-update : Msg -> Model -> (Model, Cmd Msg)
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-  case msg of
-    GotText result ->
-      case result of
-        Ok fullText ->
-          (Success fullText, Cmd.none)
-
-        Err _ ->
-          (Failure, Cmd.none)
+    case msg of
+        NoOp ->
+            ( model, Cmd.none )
 
 
 
@@ -64,7 +88,7 @@ update msg model =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-  Sub.none
+    Sub.none
 
 
 
@@ -73,12 +97,9 @@ subscriptions model =
 
 view : Model -> Html Msg
 view model =
-  case model of
-    Failure ->
-      text "I was unable to load your book."
+    case model of
+        CreationForm adInput ->
+            Html.text "Input Form"
 
-    Loading ->
-      text "Loading..."
-
-    Success fullText ->
-      pre [] [ text fullText ]
+        Listing adListing ->
+            Html.text "Go Thomas :)"
