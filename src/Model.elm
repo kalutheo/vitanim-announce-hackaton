@@ -44,9 +44,11 @@ emptyAdListing =
 type Model
     = CreationForm AdInput
     | ListingData Listing
+    | GeneratedAd String
 
 
 type Msg
     = NoOp
     | ScrolledTo CustomTableType.ScrollEvent
     | CustomTableMsg (CustomTableType.Msg Msg)
+    | Valid AdInput 

@@ -11,7 +11,7 @@ import Html.Attributes exposing (style)
 import Http
 import Model exposing (..)
 import Ports exposing (scrolledTo, updateCustomTable)
-import Validate exposing (Validator, ifBlank, ifTrue, validate)
+import Validate exposing (Validator, ifBlank, ifTrue, validate, Valid)
 
 
 
@@ -155,8 +155,13 @@ update msg model =
                             ListingData { adListing | state = newState }
             in
             ( newAdListing, Cmd.batch [ updateCustomTable False, Cmd.map CustomTableMsg newCmd ] )
+        Valid adInput -> (GeneratedAd <| transform <| validate adValidator adInput, Cmd.none)
 
-
+transform : Result (List FieldError) (Valid AdInput) -> String 
+transform result =
+    case result of 
+        Ok addInput -> "good stuff"
+        Err list -> "Something bad happened here"
 
 -- SUBSCRIPTIONS
 
@@ -180,3 +185,6 @@ view model =
 
         ListingData adListing ->
             div [ style "height" "90vh" ] [ Html.map CustomTableMsg <| CustomTable.view adListing.state (customTableModel adListing) ]
+
+        GeneratedAd ad -> 
+            Html.text ad 
