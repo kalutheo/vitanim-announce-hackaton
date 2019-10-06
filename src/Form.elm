@@ -51,6 +51,15 @@ view adInput =
                 [ div [ class "mr-2" ] [ customInput "number" "min age" (ChangeField MinAge) ]
                 , div [] [ customInput "number" "max age" (ChangeField MaxAge) ]
                 ]
+            , viewFieldRow
+                [ div [ class "mr-2 mt-2" ]
+                    [ select [ class "font-sans p-1 w-64 shadow appearance-none border rounded  py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" ]
+                        [ option [] [ text "-- Ton du message --" ]
+                        , option [] [ text "Standard" ]
+                        , option [] [ text "Funky" ]
+                        ]
+                    ]
+                ]
             ]
         , viewFieldRow [ div [ class "float-right mt-4" ] [ customButton ] ]
         ]
@@ -61,12 +70,19 @@ updateAdInputByField field value adInput =
     case field of
         StartDate ->
             Date.fromIsoString value
-                |> Result.map (\date -> { adInput | startDate = Just date })
+                |> Result.map
+                    (\date ->
+                        let
+                            _ =
+                                Debug.log "date" (Date.toIsoString date)
+                        in
+                        { adInput | startDate = Just date }
+                    )
                 |> Result.withDefault adInput
 
         EndDate ->
             Date.fromIsoString value
-                |> Result.map (\date -> { adInput | startDate = Just date })
+                |> Result.map (\date -> { adInput | endDate = Just date })
                 |> Result.withDefault adInput
 
         MinAge ->
